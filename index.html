@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Name - Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=Dela+Gothic+One&family=Unbounded:wght@200..900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+            scrollbar-width: thin;
+            scrollbar-color: #bb86fc;
+        }
+        body {
+            font-family: 'Unbounded', sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            line-height: 1.6;
+            font-weight: 400;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(18, 18, 18, 0.8);
+            padding: 1rem;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            color: #bb86fc;
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+        nav ul {
+            list-style-type: none;
+            display: flex;
+        }
+        nav ul li {
+            margin-left: 1rem;
+        }
+        nav ul li a {
+            color: #bb86fc;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+        nav ul li a:hover {
+            color: #03dac6;
+        }
+        main {
+            padding-top: 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex-grow: 1;
+            padding: 0 1rem;
+        }
+        section {
+            min-height: 100vh;
+            padding: 4rem 1rem;
+            border-bottom: 1px solid #333;
+        }
+        section:last-of-type {
+            border-bottom: none;
+        }
+        h1 {
+            color: #bb86fc;
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+        h2 {
+            color: #03dac6;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+        p, ul {
+            margin-bottom: 1rem;
+            letter-spacing: 0.2px;
+        }
+        a {
+            color: #bb86fc;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        a:hover {
+            color: #03dac6;
+        }
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        .project-box {
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .project-box:hover {
+            transform: translateY(-5px);
+        }
+        .project-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .project-content {
+            padding: 1rem;
+        }
+        .project-content h2 {
+            margin-top: 0;
+            font-size: 1.2rem;
+        }
+        .project-content p {
+            font-size: 0.9rem;
+            color: #b0b0b0;
+        }
+        .about-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        .about-text {
+            flex: 1;
+        }
+        .skills {
+            flex: 1;
+        }
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 1rem;
+        }
+        .skill-box {
+            background-color: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 0.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .skill-box:hover {
+            background-color: #2c2c2c;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .contact-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        .contact-form {
+            flex: 1;
+        }
+        .social-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .social-links a {
+            font-size: 1.5rem;
+            position: relative;
+        }
+        .social-links img {
+            transition: transform 0.3s ease;
+            height: 50px;
+        }
+        .social-links a:hover img {
+            transform: scale(1.1);
+        }
+        .social-links a::after {
+            content: attr(data-text);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            white-space: nowrap;
+            margin-bottom: 10px;
+        }
+        .social-links a:hover::after {
+            opacity: 1;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        input, textarea {
+            width: 100%;
+            background-color: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 0.5rem;
+            color: #e0e0e0;
+            font-family: 'Inter', sans-serif;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #bb86fc;
+        }
+        button {
+            background-color: #bb86fc;
+            color: #121212;
+            border: none;
+            border-radius: 4px;
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #03dac6;
+        }
+        footer {
+            background-color: #1e1e1e;
+            color: #888;
+            text-align: center;
+            padding: 1rem;
+            margin-top: auto;
+        }
+        @media (min-width: 768px) {
+            h1 {
+                font-size: 3.5rem;
+            }
+            .about-container, .contact-container {
+                flex-direction: row;
+            }
+            .project-image {
+                height: 250px;
+            }
+        }
+        @media (max-width: 767px) {
+            header {
+                flex-direction: column;
+                align-items: center;
+            }
+            nav {
+                margin-top: 1rem;
+            }
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            nav ul li {
+                margin: 0.5rem;
+            }
+            .project-box {
+                max-width: 300px;
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo"><a href="#home">Sai Nikhil Chidipothu</a></div>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <section id="home">
+            <h1>Hello,</h1>
+            <h1><big><big><a href="https://www.linkedin.com/in/sai-nikhil-a10499231/">Sai Nikhil</a></big></big> here👋🏻</h1>
+            <p>Front-End Web Development | Tech Enthusiast</p>
+            <big>
+                <p>🎓 Graduate Student in Computer Science at the <b style="color: #FFC904;">University of Central Florida (UCF) </b>
+                <p>💻 Passionate about solving complex problems through innovative technology.</p>
+                <p>🌟 Continuously learning and eager to contribute to impactful projects while growing as a professional.</p>                
+                    
+                Let's build the future together!
+            </big>
+            </p>
+        </section>
+        
+        <section id="about">
+            <h1>About Me</h1>
+            <div class="about-container">
+                <div class="about-text">
+                    <p>I'm an aspiring front-end web developer focused on creating smooth, user-friendly digital experiences. I thrive in collaborative environments where teamwork drives innovation.</p>
+                    <p>Passionate about staying at the forefront of web development trends, I constantly learn and adapt to deliver impactful solutions.</p>
+                    <p>Let's <a href="#contact">connect</a> to discuss how I can bring value to your team and contribute to its success.</p>
+                    <p>I am actively seeking job opportunities where I can contribute, grow, and continuously develop my skills. If you come across a role that aligns with my experience and strengths, please feel free to reach out.</p>
+                </div>
+                <div class="skills">
+                    <h2>Skills</h2>
+                    <div class="skills-grid">
+                        <div class="skill-box">HTML</div>
+                        <div class="skill-box">CSS</div>
+                        <div class="skill-box">JavaScript</div>
+                        <div class="skill-box">Git</div>
+                        <div class="skill-box">Python</div>
+                        <div class="skill-box">SQL</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="projects">
+            <h1>My Projects</h1>
+            <div class="project-grid">
+                <div class="project-box">
+                    <img src="pill-detection-identification.png" alt="Project 1" class="project-image">
+                    <div class="project-content">
+                        <h2>Pill Identification and Detection</h2>
+                        <p>This project aims to enhance patient safety by minimizing errors from incorrect prescriptions or tampered pill labels through pill classification using machine learning. It employs Convolutional Neural Networks (MobileNetV2) via TensorFlow and Keras to analyze pill characteristics like size, color, and shape from uploaded images. The system identifies the pill, providing its name, uses, and dosage recommendations.</p>
+                    </div>
+                </div>
+                <div class="project-box">
+                    <img src="audio-to-text.png" alt="Project 2" class="project-image">
+                    <div class="project-content">
+                        <h2>Audio to Text</h2>
+                        <p>This project focuses on converting audio inputs into accurate text using advanced speech recognition technologies. By leveraging machine learning algorithms and natural language processing, it aims to transcribe spoken words into text efficiently. The system supports various use cases, including transcription services, accessibility tools, and real-time communication enhancement.</p>
+                    </div>
+                </div>
+                <div class="project-box">
+                    <img src="weather-or-not.png" alt="Project 3" class="project-image">
+                    <div class="project-content">
+                        <h2>Weather or Not</h2>
+                        <p>Weather or Not is a project that provides simple, accurate weather updates and forecasts. It helps users plan their daily activities by offering real-time weather information in an easy-to-understand format. The project focuses on accessibility and convenience for everyday use.</p>
+                    </div>
+                </div>
+                <div class="project-box">
+                    <img src="wip.png" alt="Project 4" class="project-image">
+                    <div class="project-content">
+                        <h2>TBA</h2>
+                        <p>Will be Deployed soon!!!!</p>
+                    </div>
+                </div>
+                <div class="project-box">
+                    <img src="wip.png" alt="Project 5" class="project-image">
+                    <div class="project-content">
+                        <h2>TBA</h2>
+                        <p>Will be Deployed soon!!!!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="contact">
+            <h1>Get in Touch</h1>
+            <div class="contact-container">
+                <div class="contact-form">
+                    <form action="mailto:your-email@example.com" method="POST">
+                        <input type="text" name="name" placeholder="Your Name" required>
+                        <input type="email" name="email" placeholder="Your Email" required>
+                        <input type="text" name="subject" placeholder="Subject" required>
+                        <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+                        <button type="submit">Send Message</button>
+                    </form>
+                </div>
+                <div class="social-links">
+                    <a href="mailto:sainikhil1024@gmail.com" target="_blank" data-text="Email me"><img src="gmail-logo.png" alt="email"></a>
+                    <a href="https://www.linkedin.com/in/sai-nikhil-a10499231/" target="_blank" data-text="Connect on LinkedIn"><img src="linkedin-logo.png" alt="linkedin"></a> 
+                    <a href="https://github.com/sainikhilchidipothu" target="_blank" data-text="Check my GitHub"><img src="github-logo.png" alt="github"></a> 
+                    <a href="https://x.com/sainikhil1024" target="_blank" data-text="Follow me on Twitter"><img src="twitter-logo.png" alt="twitter"></a>
+                    <a href="https://www.instagram.com/sai.nikhil._/" target="_blank" data-text="Follow me on Instagram"><img src="instagram-logo.png" alt="instagram"></a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; Copyright 2024. Made by <a href="https://www.linkedin.com/in/sai-nikhil-a10499231/">Sai Nikhil Chidipothu</a></p>
+    </footer>
+
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+</antArtifact
