@@ -11,10 +11,24 @@
             padding: 0;
             box-sizing: border-box;
         }
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #121212;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #bb86fc;
+            border-radius: 6px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9965e5;
+        }
         html {
             scroll-behavior: smooth;
             scrollbar-width: thin;
-            scrollbar-color: #bb86fc;
+            scrollbar-color: #bb86fc #121212;
+            overflow-x: hidden;
         }
         body {
             font-family: 'Unbounded', sans-serif;
@@ -25,6 +39,8 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            max-width: 100%;
+            overflow-x: hidden;
         }
         header {
             position: fixed;
@@ -64,11 +80,13 @@
             color: #03dac6;
         }
         main {
-            padding-top: 60px;
+            padding-top: 80px;
+            width: 100%;
             max-width: 1200px;
             margin: 0 auto;
             flex-grow: 1;
-            padding: 0 1rem;
+            padding-left: 1rem;
+            padding-right: 1rem;
         }
         section {
             min-height: 100vh;
@@ -109,6 +127,8 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 2rem;
+            width: 100%;
+            padding: 0 1rem;
         }
         .project-box {
             background-color: #1e1e1e;
@@ -116,6 +136,8 @@
             overflow: hidden;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease;
+            width: 100%;
+            max-width: 100%;
         }
         .project-box:hover {
             transform: translateY(-5px);
@@ -169,6 +191,8 @@
             display: flex;
             flex-direction: column;
             gap: 2rem;
+            padding: 0 1rem;
+            width: 100%;
         }
         .contact-form {
             flex: 1;
@@ -178,6 +202,7 @@
             justify-content: center;
             flex-wrap: wrap;
             gap: 1rem;
+            padding: 1rem;
         }
         .social-links a {
             font-size: 1.5rem;
@@ -185,7 +210,8 @@
         }
         .social-links img {
             transition: transform 0.3s ease;
-            height: 50px;
+            max-width: 50px;
+            height: auto;
         }
         .social-links a:hover img {
             transform: scale(1.1);
@@ -214,6 +240,8 @@
             display: flex;
             flex-direction: column;
             gap: 1rem;
+            width: 100%;
+            max-width: 600px;
         }
         input, textarea {
             width: 100%;
@@ -293,7 +321,6 @@
             </ul>
         </nav>
     </header>
-    
     <main>
         <section id="home">
             <h1>Hello,</h1>
@@ -302,13 +329,10 @@
             <big>
                 <p>🎓 Graduate Student in Computer Science at the <b style="color: #FFC904;">University of Central Florida (UCF) </b>
                 <p>💻 Passionate about solving complex problems through innovative technology.</p>
-                <p>🌟 Continuously learning and eager to contribute to impactful projects while growing as a professional.</p>                
-                    
+                <p>🌟 Continuously learning and eager to contribute to impactful projects while growing as a professional.</p>
                 Let's build the future together!
             </big>
-            </p>
         </section>
-        
         <section id="about">
             <h1>About Me</h1>
             <div class="about-container">
@@ -331,7 +355,6 @@
                 </div>
             </div>
         </section>
-        
         <section id="projects">
             <h1>My Projects</h1>
             <div class="project-grid">
@@ -372,7 +395,6 @@
                 </div>
             </div>
         </section>
-        
         <section id="contact">
             <h1>Get in Touch</h1>
             <div class="contact-container">
