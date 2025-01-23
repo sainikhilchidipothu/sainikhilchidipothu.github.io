@@ -6,309 +6,8 @@
     <link rel="shortcut icon" href="SAI NIKHIL (1).png" type="image/x-icon">
     <title>Sai Nikhil Chidipothu</title>
     <link href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=Dela+Gothic+One&family=Unbounded:wght@200..900&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        ::-webkit-scrollbar {
-            width: 12px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #121212;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #bb86fc;
-            border-radius: 6px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #9965e5;
-        }
-        html {
-            scroll-behavior: smooth;
-            scrollbar-width: thin;
-            scrollbar-color: #bb86fc #121212;
-            overflow-x: hidden;
-        }
-        body {
-            font-family: 'Unbounded', sans-serif;
-            background-color: #121212;
-            color: #e0e0e0;
-            line-height: 1.6;
-            font-weight: 400;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            max-width: 100%;
-            overflow-x: hidden;
-        }
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background-color: rgba(18, 18, 18, 0.8);
-            padding: 1rem;
-            z-index: 1000;
-            backdrop-filter: blur(5px);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .logo {
-            color: #bb86fc;
-            font-size: 1.2rem;
-            font-weight: 600;
-            letter-spacing: -0.5px;
-        }
-        nav ul {
-            list-style-type: none;
-            display: flex;
-        }
-        nav ul li {
-            margin-left: 1rem;
-        }
-        nav ul li a {
-            color: #bb86fc;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-            transition: color 0.3s ease;
-            letter-spacing: 0.5px;
-        }
-        nav ul li a:hover {
-            color: #03dac6;
-        }
-        main {
-            padding-top: 80px;
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            flex-grow: 1;
-            padding-left: 1rem;
-            padding-right: 1rem;
-        }
-        section {
-            min-height: 100vh;
-            padding: 4rem 1rem;
-            border-bottom: 1px solid #333;
-        }
-        section:last-of-type {
-            border-bottom: none;
-        }
-        h1 {
-            color: #bb86fc;
-            margin-bottom: 1rem;
-            font-size: 2.5rem;
-            font-weight: 600;
-            letter-spacing: -0.5px;
-        }
-        h2 {
-            color: #03dac6;
-            margin-top: 1rem;
-            margin-bottom: 0.5rem;
-            font-size: 1.5rem;
-            font-weight: 600;
-            letter-spacing: -0.3px;
-        }
-        p, ul {
-            margin-bottom: 1rem;
-            letter-spacing: 0.2px;
-        }
-        a {
-            color: #bb86fc;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        a:hover {
-            color: #03dac6;
-        }
-        .project-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            width: 100%;
-            padding: 0 1rem;
-        }
-        .project-box {
-            background-color: #1e1e1e;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-            width: 100%;
-            max-width: 100%;
-        }
-        .project-box:hover {
-            transform: translateY(-5px);
-        }
-        .project-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-        .project-content {
-            padding: 1rem;
-        }
-        .project-content h2 {
-            margin-top: 0;
-            font-size: 1.2rem;
-        }
-        .project-content p {
-            font-size: 0.9rem;
-            color: #b0b0b0;
-        }
-        .about-container {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-        .about-text {
-            flex: 1;
-        }
-        .skills {
-            flex: 1;
-        }
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 1rem;
-        }
-        .skill-box {
-            background-color: #1e1e1e;
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 0.5rem;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-        .skill-box:hover {
-            background-color: #2c2c2c;
-            transform: translateY(-3px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .contact-container {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-            padding: 0 1rem;
-            width: 100%;
-        }
-        .contact-form {
-            flex: 1;
-        }
-        .social-links {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-            padding: 1rem;
-        }
-        .social-links a {
-            font-size: 1.5rem;
-            position: relative;
-        }
-        .social-links img {
-            transition: transform 0.3s ease;
-            max-width: 50px;
-            height: auto;
-        }
-        .social-links a:hover img {
-            transform: scale(1.1);
-        }
-        .social-links a::after {
-            content: attr(data-text);
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #333;
-            color: #fff;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 12px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-            white-space: nowrap;
-            margin-bottom: 10px;
-        }
-        .social-links a:hover::after {
-            opacity: 1;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            width: 100%;
-            max-width: 600px;
-        }
-        input, textarea {
-            width: 100%;
-            background-color: #1e1e1e;
-            border: 1px solid #333;
-            border-radius: 4px;
-            padding: 0.5rem;
-            color: #e0e0e0;
-            font-family: 'Inter', sans-serif;
-        }
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: #bb86fc;
-        }
-        button {
-            background-color: #bb86fc;
-            color: #121212;
-            border: none;
-            border-radius: 4px;
-            padding: 0.5rem 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: #03dac6;
-        }
-        footer {
-            background-color: #1e1e1e;
-            color: #888;
-            text-align: center;
-            padding: 1rem;
-            margin-top: auto;
-        }
-        @media (min-width: 768px) {
-            h1 {
-                font-size: 3.5rem;
-            }
-            .about-container, .contact-container {
-                flex-direction: row;
-            }
-            .project-image {
-                height: 250px;
-            }
-        }
-        @media (max-width: 767px) {
-            header {
-                flex-direction: column;
-                align-items: center;
-            }
-            nav {
-                margin-top: 1rem;
-            }
-            nav ul {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            nav ul li {
-                margin: 0.5rem;
-            }
-            .project-box {
-                max-width: 300px;
-                margin: 0 auto;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
+
 </head>
 <body>
     <header>
@@ -318,6 +17,7 @@
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#projects">Projects</a></li>
+                <li><a href="#certifications">Certifications</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
         </nav>
@@ -346,12 +46,19 @@
                 <div class="skills">
                     <h2>Skills</h2>
                     <div class="skills-grid">
+                        <div class="skill-box">Python</div>
                         <div class="skill-box">HTML</div>
                         <div class="skill-box">CSS</div>
                         <div class="skill-box">JavaScript</div>
                         <div class="skill-box">Git</div>
-                        <div class="skill-box">Python</div>
-                        <div class="skill-box">SQL</div>
+                        <div class="skill-box">GitHub</div>
+                        <div class="skill-box">MySQL</div>
+                        <div class="skill-box">PostgreSQL</div>
+                        <div class="skill-box">MongoDB</div>
+                        <div class="skill-box">C</div>
+                        <div class="skill-box">Java</div>
+                        <div class="skill-box">PowerBI</div>
+                        <div class="skill-box">Bootstrap</div>
                     </div>
                 </div>
             </div>
@@ -396,6 +103,47 @@
                 </div>
             </div>
         </section>
+
+        <section id="certifications">
+            <div class="cert-grid">
+                <h1>Certifications</h1>
+                <div class="cert-wrapper">
+                    <img src="Certificates/Career Essentials In Generative AI by Microsoft and LinkedIn.png" alt="certificate">
+                    <a href="https://www.linkedin.com/learning/certificates/ab1de4d289fbdf8b7189d138449857064d679b8de3d396ea20787bcdb085de4c?u=57691257" class="cert-btn">View Certificate</a>
+                </div>
+                <div class="cert-wrapper">
+                    <img src="Certificates/Career Essentials in Software Development by Microsoft and LinkedIn.png" alt="certificate">
+                    <a href="https://www.linkedin.com/learning/certificates/37a89a45e77072a12ba1928fd21524509c44aa7cf8b059111daf165f1862d029?u=57691257" class="cert-btn">View Certificate</a>
+                </div>
+                <div class="cert-wrapper">
+                    <img src="Certificates/Databricks Fundamentals - Databricks.png" alt="certificate">
+                    <a href="https://credentials.databricks.com/c8823066-b3b6-4234-b22f-cab9afdfb886#acc.NzRtvPXZ" class="cert-btn">View Certificate</a>
+                </div>
+                <div class="cert-wrapper">
+                    <img src="Certificates/ESG Virtual Experience Program - TCS.png" alt="certificate">
+                    <a href="https://forage-uploads-prod.s3.amazonaws.com/completion-certificates/Tata/N8Muuhk6XsXgMTeu2_Tata%20Consultancy%20Services_BwAa5obWRaNdfTPSf_1684947138449_completion_certificate.pdf" class="cert-btn">View Certificate</a>
+                </div>
+                <div class="cert-wrapper">
+                    <img src="Certificates/Software Engineering Virtual Experience Program - Goldman Sachs.png" alt="certificate">
+                    <a href="https://forage-uploads-prod.s3.amazonaws.com/completion-certificates/Goldman%20Sachs/NPdeQ43o8P9HJmJzg_Goldman%20Sachs_BwAa5obWRaNdfTPSf_1686237232805_completion_certificate.pdf" class="cert-btn">View Certificate</a>
+                </div>
+                <div class="cert-wrapper">
+                    <img src="Certificates/Python Basic - Hackerank.png" alt="certificate">
+                    <a href="https://www.hackerrank.com/certificates/454596256f78" class="cert-btn">View Certificate</a>
+                </div>
+                <div class="cert-wrapper">
+                    <img src="Certificates/Introduction to Cybersecurity - Cisco.png" alt="certificate">
+                    <a href="https://www.credly.com/badges/aa31aeb5-8332-48a5-86c5-78f3517242da" class="cert-btn">View Certificate</a>
+                </div>
+                <div class="cert-wrapper">
+                    <img src="Certificates/Learn HTML and CSS - Codedamn.png" alt="certificate">
+                    <a href="https://codedamn.com/certificate/verify/75af53aa438041a088986d9382e5b78f904e2dff" class="cert-btn">View Certificate</a>
+                </div>
+                
+        
+            </div>
+        </section>
+        
         <section id="contact">
             <h1>Get in Touch</h1>
             <div class="contact-container">
