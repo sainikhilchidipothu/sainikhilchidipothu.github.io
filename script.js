@@ -1,286 +1,319 @@
+(function () {
+  'use strict';
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const skillItems = document.querySelectorAll('.skill-grid-item');
-        const projectCards = document.querySelectorAll('.project-card');
-        let activeFilters = [];
+  document.addEventListener('DOMContentLoaded', init);
 
-        function filterProjects() {
-            if (activeFilters.length === 0) {
-                projectCards.forEach(card => card.classList.remove('is-filtered'));
-                return;
-            }
+  function init() {
+    setCurrentYear();
+    initMobileNav();
+    initScrollSpy();
+    initRevealOnScroll();
+    initTerminal();
+  }
 
-            projectCards.forEach(card => {
-                const projectSkills = card.dataset.skills.split(' ');
-                const matches = activeFilters.every(filter => projectSkills.includes(filter));
-                if (matches) {
-                    card.classList.remove('is-filtered');
-                } else {
-                    card.classList.add('is-filtered');
-                }
-            });
-        }
+  function setCurrentYear() {
+    var el = document.getElementById('currentYear');
+    if (el) el.textContent = String(new Date().getFullYear());
+  }
 
-        skillItems.forEach(item => {
-            item.addEventListener('click', () => {
-                const skill = item.dataset.skill;
-                item.classList.toggle('active');
-                
-                if (item.classList.contains('active')) {
-                    activeFilters.push(skill);
-                } else {
-                    activeFilters = activeFilters.filter(f => f !== skill);
-                }
-                filterProjects();
-            });
-        });
+  function initMobileNav() {
+    var toggle = document.querySelector('.nav__toggle');
+    var links  = document.querySelector('.nav__links');
+    if (!toggle || !links) return;
 
-        const navToggle = document.querySelector('.nav__toggle');
-        const navLinksContainer = document.querySelector('.nav__links');
-        if (navToggle && navLinksContainer) {
-            navToggle.addEventListener('click', () => {
-                const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
-                navToggle.setAttribute('aria-expanded', !isExpanded);
-                navLinksContainer.classList.toggle('nav__links--open');
-                navToggle.querySelector('i').classList.toggle('bi-list');
-                navToggle.querySelector('i').classList.toggle('bi-x');
-            });
-        }
-        
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
+    function setOpen(open) {
+      toggle.setAttribute('aria-expanded', String(open));
+      links.classList.toggle('nav__links--open', open);
+      var icon = toggle.querySelector('i');
+      if (icon) {
+        icon.classList.toggle('bi-list', !open);
+        icon.classList.toggle('bi-x', open);
+      }
+    }
 
-        const headerElement = document.querySelector('.site-header');
-        const headerHeight = headerElement ? headerElement.clientHeight : 70;
-        const navLinksElements = document.querySelectorAll('.nav__links a');
-        const sections = document.querySelectorAll('main section[id]');
-
-        window.addEventListener('scroll', () => {
-            const homeSection = document.getElementById('home');
-            const halfway = homeSection ? homeSection.offsetTop + homeSection.offsetHeight / 3 : 300;
-            
-            navLinksElements.forEach(link => {
-                if (window.scrollY > halfway) { 
-                    link.classList.add('icon-mode');
-                } else {
-                    link.classList.remove('icon-mode');
-                }
-            });
-
-            let currentSectionId = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop - (headerHeight + 50);
-                if (window.scrollY >= sectionTop) {
-                    currentSectionId = section.id;
-                }
-            });
-
-            navLinksElements.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === `#${currentSectionId}`) {
-                    link.classList.add('active');
-                }
-            });
-        }, { passive: true });
-        
-        const animatedElements = document.querySelectorAll('.animate-on-scroll');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { rootMargin: '0px', threshold: 0.1 });
-        animatedElements.forEach(el => { observer.observe(el); });
-
-        /* === NEW TERMINAL LOGIC === */
-        const terminal = document.getElementById('terminal');
-        const terminalBody = document.getElementById('terminalBody');
-        const terminalInput = document.getElementById('terminalInput');
-        const terminalCloseBtn = document.getElementById('terminalCloseBtn');
-        const terminalFab = document.getElementById('terminalFab');
-
-        let isTyping = false;
-        let currentPrompt;
-
-        const toggleTerminal = () => {
-            const isOpen = terminal.classList.toggle('terminal--open');
-            terminalFab.classList.toggle('terminal-fab--hidden', isOpen);
-            document.body.classList.toggle('terminal-open-no-scroll', isOpen);
-            /* === FIX 2: Auto-focus the input after the animation completes === */
-            if (isOpen) {
-                setTimeout(() => terminalInput.focus(), 400);
-            }
-        };
-
-        const createNewPromptLine = () => {
-            const p = document.createElement('p');
-            p.innerHTML = `<span style="color:var(--heading-text-color); font-weight:bold;">&gt;</span> <span class="command-line"></span><span class="blinking-cursor"></span>`;
-            terminalBody.appendChild(p);
-            currentPrompt = p;
-            terminalBody.scrollTop = terminalBody.scrollHeight;
-        };
-        
-        function typeWriter(outputHTML, callback) {
-            isTyping = true;
-
-            const outputWrapper = document.createElement('div');
-            outputWrapper.innerHTML = outputHTML;
-            terminalBody.appendChild(outputWrapper);
-
-            const typingQueue = [];
-            const walker = document.createTreeWalker(outputWrapper, NodeFilter.SHOW_TEXT, null, false);
-            let node;
-            while(node = walker.nextNode()) {
-                if(node.textContent.trim() !== '') {
-                    typingQueue.push({
-                        element: node,
-                        text: node.textContent,
-                        speed: 8
-                    });
-                    node.textContent = '';
-                }
-            }
-
-            function processQueue() {
-                if (typingQueue.length === 0) {
-                    isTyping = false;
-                    if(callback) callback();
-                    return;
-                }
-
-                const item = typingQueue.shift();
-                let i = 0;
-                const timer = setInterval(() => {
-                    if (i < item.text.length) {
-                        item.element.textContent += item.text.charAt(i);
-                        i++;
-                        terminalBody.scrollTop = terminalBody.scrollHeight;
-                    } else {
-                        clearInterval(timer);
-                        processQueue();
-                    }
-                }, item.speed);
-            }
-            processQueue();
-        }
-
-        const processCommand = (cmd) => {
-            let output = '';
-            switch (cmd.toLowerCase()) {
-                case 'help':
-                    output = `<pre class="command-output">
-      help      - Displays this list of commands.
-      whoami    - Shows a brief summary about me.
-      projects  - Lists my featured projects with details.
-      skills    - Displays a categorized list of my technical skills.
-      contact   - Provides my contact information.
-      clear     - Clears the terminal screen.
-      close     - Closes this terminal.
-    </pre>`;
-                    break;
-                case 'whoami':
-                    output = `<p><strong>// Accessing records for user: Sai Nikhil Chidipothu...</strong></p>
-    <p><strong>Status:</strong> Graduate CS Student @ <span class="ucf-gold">University of Central Florida (UCF)</span>.</p>
-    <br>
-    <p>I believe the best software is a bridge between complex data and human intuition. My focus is on building that bridge. I'm fascinated by how machine learning can uncover hidden patterns, and I'm driven to build the high-performance applications that bring those insights to life.</p>
-    <p>Currently, I'm honing my skills as a Graduate Teaching Assistant, mentoring the next wave of developers while deepening my own expertise.</p>`;
-                    break;
-                case 'projects':
-                    let projectHTML = '<h4>// Querying project database... 3 entries found.</h4>';
-                    document.querySelectorAll('.project-card').forEach(p => {
-                        const title = p.querySelector('h4').textContent;
-                        const link = p.querySelector('.project-card__link-button[href*="github.com"]')?.href;
-
-                        projectHTML += `<br><p><strong>// Project: ${title}</strong></p>`;
-                        if (title.includes('SkyEye')) {
-                             projectHTML += `<p><strong>Challenge:</strong> Fine-tuning a YOLOv8 model for real-time performance on high-resolution drone imagery. The key was balancing accuracy with an inference speed under 80ms.</p>`;
-                        } else if (title.includes('Pill')) {
-                            projectHTML += `<p><strong>Challenge:</strong> Reducing misidentifications in a dataset of over 10,000 similar-looking pills. Optimizing the MobileNetV2 architecture was critical.</p>`;
-                        } else if (title.includes('Audio')) {
-                            projectHTML += `<p><strong>Challenge:</strong> Building a modular system that could handle various audio formats without failing, preparing the output for NLP pipelines.</p>`;
-                        }
-                        
-                        if (link) {
-                            projectHTML += `<p><strong>Source:</strong> <a href="${link}" target="_blank">View on GitHub</a></p>`;
-                        }
-                    });
-                    output = projectHTML;
-                    break;
-                case 'skills':
-                    output = `<h4>// Compiling skill assessment...</h4>
-    <br>
-    <p><strong>Languages:</strong> Python (Primary for ML/scripting), Java, C</p>
-    <p><strong>Machine Learning:</strong> TensorFlow, Keras, YOLOv8 (Model fine-tuning, computer vision)</p>
-    <p><strong>Web & Backend:</strong> Flask, React, Streamlit (API development, interactive UIs)</p>
-    <p><strong>Databases:</strong> PostgreSQL, MongoDB, SQL (Data modeling and querying)</p>
-    <p><strong>Tools & Platforms:</strong> Git, GitHub, Linux, AWS (Version control, deployment, and systems)</p>`;
-                    break;
-                case 'contact':
-                    output = `<h4>// Establishing connection protocols...</h4>
-    <br>
-    <p>Let's connect and build something great together. You can reach me through the following channels:</p>
-    <p><strong>- Email:</strong> <a href="mailto:sainikhil1024@gmail.com">sainikhil1024@gmail.com</a> (Preferred for direct inquiries)</p>
-    <p><strong>- LinkedIn:</strong> <a href="https://www.linkedin.com/in/sai-nikhil-a10499231/" target="_blank">linkedin.com/in/sai-nikhil-a10499231</a> (For professional networking)</p>
-    <p><strong>- GitHub:</strong> <a href="https://github.com/sainikhilchidipothu" target="_blank">github.com/sainikhilchidipothu</a> (To see my latest code)</p>`;
-                    break;
-                case 'clear':
-                    terminalBody.innerHTML = '';
-                    createNewPromptLine();
-                    return;
-                case 'close':
-                    toggleTerminal();
-                    return;
-                default:
-                    output = `<p>Command not found: '${cmd}'. Type 'help' for a list of commands.</p>`;
-                    break;
-            }
-
-            if (output) {
-              typeWriter(output, createNewPromptLine);
-            } else {
-              createNewPromptLine();
-            }
-        };
-        
-        terminalFab.addEventListener('click', toggleTerminal);
-        terminalCloseBtn.addEventListener('click', toggleTerminal);
-
-        terminalBody.addEventListener('click', () => {
-            terminalInput.focus();
-        });
-
-        terminalInput.addEventListener('input', () => {
-            if (currentPrompt) {
-                const commandLine = currentPrompt.querySelector('.command-line');
-                if (commandLine) {
-                    commandLine.textContent = terminalInput.value;
-                }
-            }
-        });
-
-        terminalInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !isTyping) {
-                const command = terminalInput.value.trim();
-                
-                if (currentPrompt) {
-                    const cursor = currentPrompt.querySelector('.blinking-cursor');
-                    if(cursor) cursor.remove();
-                }
-
-                if (command) {
-                    processCommand(command);
-                } else {
-                   const p = document.createElement('p');
-                   p.innerHTML = `<span style="color:var(--heading-text-color); font-weight:bold;">&gt;</span>`;
-                   terminalBody.appendChild(p);
-                   createNewPromptLine();
-                }
-                
-                
-                terminalInput.value = '';
-            }
-        });
-
-        createNewPromptLine();
+    toggle.addEventListener('click', function () {
+      var open = toggle.getAttribute('aria-expanded') !== 'true';
+      setOpen(open);
     });
+
+    links.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () { setOpen(false); });
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') setOpen(false);
+    });
+  }
+
+  function initScrollSpy() {
+    var navLinks = document.querySelectorAll('.nav__link');
+    var sections = Array.prototype.slice.call(
+      document.querySelectorAll('main section[id]')
+    );
+    if (!sections.length) return;
+
+    var ticking = false;
+    var lastY = 0;
+
+    function update() {
+      var headerH = document.querySelector('.site-header').offsetHeight || 72;
+      var current = sections[0].id;
+      for (var i = 0; i < sections.length; i++) {
+        var top = sections[i].offsetTop - headerH - 80;
+        if (lastY >= top) current = sections[i].id;
+      }
+      navLinks.forEach(function (a) {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+      });
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', function () {
+      lastY = window.scrollY;
+      if (!ticking) {
+        window.requestAnimationFrame(update);
+        ticking = true;
+      }
+    }, { passive: true });
+
+    update();
+  }
+
+  function initRevealOnScroll() {
+    var targets = document.querySelectorAll(
+      '#about .about, ' +
+      '#about .section__head, ' +
+      '#projects .section__head, ' +
+      '#projects .project, ' +
+      '#skills .section__head, ' +
+      '#skills .skill-group, ' +
+      '#skills .coursework, ' +
+      '#contact .section__head, ' +
+      '#contact .contact__card, ' +
+      '#contact .contact__primary, ' +
+      '#contact .contact__primary'
+    );
+    targets.forEach(function (t) { t.classList.add('reveal'); });
+
+    if (!('IntersectionObserver' in window)) {
+      targets.forEach(function (t) { t.classList.add('is-visible'); });
+      return;
+    }
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+
+    targets.forEach(function (t) { io.observe(t); });
+  }
+
+  function initTerminal() {
+    var fab    = document.getElementById('terminalFab');
+    var term   = document.getElementById('terminal');
+    var body   = document.getElementById('terminalBody');
+    var input  = document.getElementById('terminalInput');
+    var close  = document.getElementById('terminalCloseBtn');
+    if (!fab || !term || !body || !input || !close) return;
+
+    var promptEl  = null;
+    var history   = [];
+    var historyIx = -1;
+
+    function open() {
+      term.hidden = false;
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          term.classList.add('terminal--open');
+        });
+      });
+      fab.setAttribute('aria-expanded', 'true');
+      setTimeout(function () { input.focus(); }, 250);
+    }
+
+    function close_() {
+      term.classList.remove('terminal--open');
+      fab.setAttribute('aria-expanded', 'false');
+      setTimeout(function () {
+        if (!term.classList.contains('terminal--open')) term.hidden = true;
+      }, 320);
+    }
+
+    function newPrompt() {
+      var p = document.createElement('p');
+      p.innerHTML = '<span class="cmd-prompt">sai@portfolio</span> <span class="cmd-path">~</span> % <span class="cmd-line"></span><span class="blink"></span>';
+      body.appendChild(p);
+      promptEl = p;
+      body.scrollTop = body.scrollHeight;
+    }
+
+    function print(html) {
+      var wrap = document.createElement('div');
+      wrap.innerHTML = html;
+      body.appendChild(wrap);
+      body.scrollTop = body.scrollHeight;
+      newPrompt();
+    }
+
+    var COMMANDS = {
+      help: function () {
+        return '<p>Use one of these:</p>' +
+               '<pre>about    who I am\nwork     projects worth opening\nstack    tools I use\ncontact  email + links\nresume   open résumé\nclear    clear the window\nclose    close this</pre>' +
+               '<p class="terminal__hint">Type a command and press Enter.</p>';
+      },
+
+      about: function () {
+        return '<p>I’m Sai. I build ML and software projects, mostly around applied AI, computer vision, and making models more efficient.</p>' +
+               '<p>I care about clear code, useful outputs, and being able to explain why something works, or why it does not.</p>';
+      },
+
+      work: function () {
+        return '<p>I’d start with these:</p>' +
+               '<p><strong>SparseGPT</strong>: LLaMA-7B pruning experiments. Finished, measured, and written up in code. <a href="https://github.com/sainikhilchidipothu/CAP6614-Current-Topics-in-Machine-Learning" target="_blank" rel="noopener">repo</a></p>' +
+               '<p><strong>SkyEye</strong>: aerial object detection with YOLOv8, tuned for fast inference. <a href="https://github.com/UmaimaKhan01/SkyEye-Aerial-Object-Detection-using-Yolo" target="_blank" rel="noopener">repo</a></p>' +
+               '<p><strong>What-TO-DO</strong>: a small React planner I actually use to think through tasks. <a href="https://what-to-do-nu.vercel.app/" target="_blank" rel="noopener">live</a></p>';
+      },
+
+      stack: function () {
+        return '<p>Usually Python for ML, React when something needs a usable interface, and Docker/AWS when I need the setup to be repeatable.</p>' +
+               '<p>Tools I come back to: PyTorch, TensorFlow/Keras, scikit-learn, YOLOv8, Hugging Face, Flask, FastAPI, React, Tailwind, PostgreSQL, Pandas, and NumPy.</p>';
+      },
+
+      contact: function () {
+        return '<p>Email is best: <a href="mailto:ch.sainikhil01@gmail.com">ch.sainikhil01@gmail.com</a></p>' +
+               '<p>Also here: <a href="https://www.linkedin.com/in/sainikhilchidipothu/" target="_blank" rel="noopener">LinkedIn</a> · <a href="https://github.com/sainikhilchidipothu" target="_blank" rel="noopener">GitHub</a></p>';
+      },
+
+      resume: function () {
+        window.open('https://drive.google.com/file/d/1s1TNSzTLQO9Ujc5g_JqdLFS45D3DFoRa/view?usp=sharing', '_blank', 'noopener');
+        return '<p>Opening résumé. If nothing opens, your browser probably blocked the new tab. The résumé button on the page works too.</p>';
+      },
+
+      ls: function () {
+        return '<pre>about  work  stack  contact  resume</pre>';
+      },
+
+      pwd: function () {
+        return '<pre>/portfolio/sai</pre>';
+      },
+
+      clear: function () {
+        body.innerHTML = '';
+        return '__skip__';
+      },
+
+      close: function () {
+        close_();
+        return '__skip__';
+      },
+
+      hi: function () {
+        return '<p>Hey. Try <strong>work</strong> if you want the useful stuff, or <strong>contact</strong> if you just need a way to reach me.</p>';
+      },
+
+      thanks: function () {
+        return '<p>Of course.</p>';
+      }
+    };
+
+    COMMANDS.hello = COMMANDS.hi;
+    COMMANDS.whoami = COMMANDS.about;
+    COMMANDS.projects = COMMANDS.work;
+    COMMANDS.skills = COMMANDS.stack;
+    COMMANDS.email = COMMANDS.contact;
+    COMMANDS.linkedin = COMMANDS.contact;
+    COMMANDS.github = COMMANDS.contact;
+    COMMANDS['thank you'] = COMMANDS.thanks;
+
+    function run(cmd) {
+      var key = cmd.toLowerCase().trim();
+      var fn  = COMMANDS[key];
+      var output = fn
+        ? fn()
+        : '<p>I do not have that one here. Try <strong>help</strong> to see the commands.</p>';
+
+      if (output === '__skip__') {
+        if (key === 'clear') newPrompt();
+        return;
+      }
+      print(output);
+    }
+
+    fab.addEventListener('click', open);
+    close.addEventListener('click', close_);
+    term.addEventListener('click', function () { input.focus(); });
+
+    body.addEventListener('click', function () { input.focus(); });
+
+    function submitCommand(cmd) {
+      if (!cmd) return;
+      if (promptEl) {
+        var line = promptEl.querySelector('.cmd-line');
+        var blink = promptEl.querySelector('.blink');
+        if (line) line.textContent = cmd;
+        if (blink) blink.remove();
+      }
+      history.unshift(cmd);
+      historyIx = -1;
+      input.value = '';
+      run(cmd);
+    }
+
+    input.addEventListener('input', function () {
+      if (!promptEl) return;
+      var line = promptEl.querySelector('.cmd-line');
+      if (line) line.textContent = input.value;
+    });
+
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        var cmd = input.value.trim();
+        if (cmd) {
+          submitCommand(cmd);
+        } else {
+          newPrompt();
+        }
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (historyIx + 1 < history.length) {
+          historyIx++;
+          input.value = history[historyIx];
+          updatePromptLine();
+        }
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (historyIx > 0) {
+          historyIx--;
+          input.value = history[historyIx];
+        } else {
+          historyIx = -1;
+          input.value = '';
+        }
+        updatePromptLine();
+      } else if (e.key === 'Escape') {
+        close_();
+      }
+    });
+
+    function updatePromptLine() {
+      var line = promptEl && promptEl.querySelector('.cmd-line');
+      if (line) line.textContent = input.value;
+    }
+
+    document.addEventListener('keydown', function (e) {
+      var tag = document.activeElement && document.activeElement.tagName;
+      var isTypingField = tag === 'INPUT' || tag === 'TEXTAREA';
+      if (e.key === '`' && term.hidden && !isTypingField) {
+        e.preventDefault();
+        open();
+      }
+    });
+
+    newPrompt();
+  }
+
+})();
