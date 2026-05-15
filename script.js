@@ -89,8 +89,6 @@
       '#skills .skill-group, ' +
       '#skills .coursework, ' +
       '#contact .section__head, ' +
-      '#contact .contact__card, ' +
-      '#contact .contact__primary, ' +
       '#contact .contact__primary'
     );
     targets.forEach(function (t) { t.classList.add('reveal'); });
@@ -167,12 +165,12 @@
       },
 
       about: function () {
-        return '<p>I’m Sai. I build ML and software projects, mostly around applied AI, computer vision, and making models more efficient.</p>' +
+        return '<p>I\'m Sai. I build ML and software projects, mostly around applied AI, computer vision, and making models more efficient.</p>' +
                '<p>I care about clear code, useful outputs, and being able to explain why something works, or why it does not.</p>';
       },
 
       work: function () {
-        return '<p>I’d start with these:</p>' +
+        return '<p>I\'d start with these:</p>' +
                '<p><strong>SparseGPT</strong>: LLaMA-7B pruning experiments. Finished, measured, and written up in code. <a href="https://github.com/sainikhilchidipothu/CAP6614-Current-Topics-in-Machine-Learning" target="_blank" rel="noopener">repo</a></p>' +
                '<p><strong>SkyEye</strong>: aerial object detection with YOLOv8, tuned for fast inference. <a href="https://github.com/UmaimaKhan01/SkyEye-Aerial-Object-Detection-using-Yolo" target="_blank" rel="noopener">repo</a></p>' +
                '<p><strong>What-TO-DO</strong>: a small React planner I actually use to think through tasks. <a href="https://what-to-do-nu.vercel.app/" target="_blank" rel="noopener">live</a></p>';
@@ -189,7 +187,7 @@
       },
 
       resume: function () {
-        window.open('https://drive.google.com/file/d/1s1TNSzTLQO9Ujc5g_JqdLFS45D3DFoRa/view?usp=sharing', '_blank', 'noopener');
+        window.open('https://drive.google.com/file/d/1jp8P2rCmN8wk186nQxmFUVzmKQFaZWZB/view?usp=sharing', '_blank', 'noopener');
         return '<p>Opening résumé. If nothing opens, your browser probably blocked the new tab. The résumé button on the page works too.</p>';
       },
 
